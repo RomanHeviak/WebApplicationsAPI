@@ -6,7 +6,7 @@ using WebApplicationAPI.Dtos;
 
 namespace WebApplicationAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/videoGameCharacters")]
     [ApiController]
     public class VideoGameCharactersController(IVideoGameCharacterService service) : ControllerBase
     {
