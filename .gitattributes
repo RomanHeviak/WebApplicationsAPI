@@ -1,0 +1,38 @@
+# Set default behavior to automatically normalize line endings.
+* text=auto
+
+# Force bash scripts to always use LF line endings so that if a repo is accessed
+# in Unix via a file share from Windows, the scripts will work.
+*.sh text eol=lf
+
+# Force batch scripts to always use CRLF line endings.
+*.{cmd,[cC][mM][dD]} text eol=crlf
+*.{bat,[bB][aA][tT]} text eol=crlf
+
+# Source code
+*.cs        text diff=csharp
+*.vb        text
+*.cshtml    text
+*.razor     text
+*.csproj    text
+*.sln       text eol=crlf
+*.slnx      text
+*.props     text
+*.targets   text
+*.config    text
+*.json      text
+*.xml       text
+*.yml       text
+*.yaml      text
+*.md        text
+
+# Binary files should not be modified
+*.dll       binary
+*.exe       binary
+*.pdb       binary
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.ico       binary
+*.snk       binary
