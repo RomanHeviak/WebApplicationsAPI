@@ -1,6 +1,6 @@
-﻿namespace WebApplicationAPI.Models
+﻿namespace WebApplicationAPI.Dtos.VideoGame
 {
-    public class VideoGame
+    public class VideoGameDto
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;

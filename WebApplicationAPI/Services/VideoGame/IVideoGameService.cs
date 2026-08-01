@@ -1,0 +1,9 @@
+﻿using WebApplicationAPI.Dtos.VideoGame;
+
+namespace WebApplicationAPI.Services.VideoGame
+{
+    public interface IVideoGameService
+    {
+        Task<VideoGameDto> CreateVideoGameAsync(CreateUpdateVideoGameDto videoGame);
+    }
+}
