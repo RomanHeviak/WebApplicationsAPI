@@ -1,7 +1,7 @@
 ﻿using WebApplicationAPI.Models;
-using WebApplicationAPI.Dtos;
+using WebApplicationAPI.Dtos.Character;
 
-namespace WebApplicationAPI.Services
+namespace WebApplicationAPI.Services.VideoGameCharacter
 {
     public interface IVideoGameCharacterService
     {

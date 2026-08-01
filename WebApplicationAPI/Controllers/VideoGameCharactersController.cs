@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApplicationAPI.Models;
-using WebApplicationAPI.Services;
-using WebApplicationAPI.Dtos;
+using WebApplicationAPI.Services.VideoGameCharacter;
+using WebApplicationAPI.Dtos.Character;
 
 namespace WebApplicationAPI.Controllers
 {

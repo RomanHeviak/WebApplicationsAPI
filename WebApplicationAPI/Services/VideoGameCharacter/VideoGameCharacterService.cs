@@ -1,9 +1,9 @@
 ﻿using WebApplicationAPI.Models;
 using WebApplicationAPI.Data;
-using WebApplicationAPI.Dtos;
 using Microsoft.EntityFrameworkCore;
+using WebApplicationAPI.Dtos.Character;
 
-namespace WebApplicationAPI.Services
+namespace WebApplicationAPI.Services.VideoGameCharacter
 {
     public class VideoGameCharacterService(AppDbContext context) : IVideoGameCharacterService
     {

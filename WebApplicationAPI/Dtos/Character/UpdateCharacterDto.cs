@@ -1,4 +1,4 @@
-﻿namespace WebApplicationAPI.Dtos
+﻿namespace WebApplicationAPI.Dtos.Character
 {
     public class UpdateCharacterDto
     {
