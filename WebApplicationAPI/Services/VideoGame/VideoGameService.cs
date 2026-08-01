@@ -25,5 +25,19 @@ namespace WebApplicationAPI.Services.VideoGame
                 ReleaseDate = newVideoGame.ReleaseDate
             };
         }
+
+        public async Task<bool> DeleteVideoGameAsync(int id)
+        {
+            var videoGame = await context.VideoGames.FindAsync(id);
+            if (videoGame is null)
+            {
+                return false;
+            }
+
+            context.VideoGames.Remove(videoGame);
+            await context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

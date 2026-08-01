@@ -16,5 +16,16 @@ namespace WebApplicationAPI.Controllers
 
             return Ok(createdVideoGame);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteVideoGame(int id)
+        {
+            var isDeleted = await service.DeleteVideoGameAsync(id);
+            if (!isDeleted)
+            {
+                return NotFound("Video game not found");
+            }
+            return Ok(isDeleted);
+        }
     }
 }

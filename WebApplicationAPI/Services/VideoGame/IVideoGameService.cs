@@ -5,5 +5,6 @@ namespace WebApplicationAPI.Services.VideoGame
     public interface IVideoGameService
     {
         Task<VideoGameDto> CreateVideoGameAsync(CreateUpdateVideoGameDto videoGame);
+        Task<bool> DeleteVideoGameAsync(int id);
     }
 }
