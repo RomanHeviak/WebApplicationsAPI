@@ -1,6 +1,6 @@
-using WebApplicationAPI.Services;
 using WebApplicationAPI.Data;
 using Microsoft.EntityFrameworkCore;
+using WebApplicationAPI.Services.VideoGameCharacter;
 
 var builder = WebApplication.CreateBuilder(args);
 
