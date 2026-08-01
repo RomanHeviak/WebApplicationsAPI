@@ -1,4 +1,5 @@
-﻿using WebApplicationAPI.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using WebApplicationAPI.Data;
 using WebApplicationAPI.Dtos.Character;
 using WebApplicationAPI.Dtos.VideoGame;
 using WebApplicationAPI.Models;
@@ -7,6 +8,19 @@ namespace WebApplicationAPI.Services.VideoGame
 {
     public class VideoGameService(AppDbContext context) : IVideoGameService
     {
+        public async Task<List<VideoGameDto>> GetAllVideoGames()
+        {
+            return await context.VideoGames
+                .Select(vg => new VideoGameDto
+                {
+                    Id = vg.Id,
+                    Name = vg.Name,
+                    Genre = vg.Genre,
+                    ReleaseDate = vg.ReleaseDate
+                })
+                .ToListAsync();
+        }
+
         public async Task<VideoGameDto> CreateVideoGameAsync(CreateUpdateVideoGameDto videoGame)
         {
             var newVideoGame = new Models.VideoGame

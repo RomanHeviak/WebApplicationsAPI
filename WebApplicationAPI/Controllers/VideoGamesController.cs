@@ -9,6 +9,13 @@ namespace WebApplicationAPI.Controllers
     [ApiController]
     public class VideoGamesController(IVideoGameService service) : ControllerBase
     {
+        [HttpGet]
+        public async Task<ActionResult<List<VideoGameDto>>> GetAllVideoGames()
+        {
+            var videoGames = await service.GetAllVideoGames();
+            return Ok(videoGames);
+        }
+
         [HttpPost]
         public async Task<ActionResult<VideoGameDto>> CreateVideoGame(CreateUpdateVideoGameDto videoGameInfo)
         {
