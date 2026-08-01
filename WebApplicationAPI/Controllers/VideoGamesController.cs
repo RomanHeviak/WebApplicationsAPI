@@ -12,8 +12,19 @@ namespace WebApplicationAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<VideoGameDto>>> GetAllVideoGames()
         {
-            var videoGames = await service.GetAllVideoGames();
+            var videoGames = await service.GetAllVideoGamesAsync();
             return Ok(videoGames);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<VideoGameDto>> GetVideoGameById(int id)
+        {
+            var videoGame = await service.GetVideoGameByIdAsync(id);
+            if (videoGame is null)
+            {
+                return NotFound("Video game not found");
+            }
+            return Ok(videoGame);
         }
 
         [HttpPost]

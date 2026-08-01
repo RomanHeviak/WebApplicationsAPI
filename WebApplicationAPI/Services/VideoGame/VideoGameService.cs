@@ -8,7 +8,7 @@ namespace WebApplicationAPI.Services.VideoGame
 {
     public class VideoGameService(AppDbContext context) : IVideoGameService
     {
-        public async Task<List<VideoGameDto>> GetAllVideoGames()
+        public async Task<List<VideoGameDto>> GetAllVideoGamesAsync()
         {
             return await context.VideoGames
                 .Select(vg => new VideoGameDto
@@ -19,6 +19,22 @@ namespace WebApplicationAPI.Services.VideoGame
                     ReleaseDate = vg.ReleaseDate
                 })
                 .ToListAsync();
+        }
+
+        public async Task<VideoGameDto?> GetVideoGameByIdAsync(int id)
+        {
+            var videoGame = await context.VideoGames.FindAsync(id);
+            if (videoGame is null)
+            {
+                return null;
+            }
+            return new VideoGameDto
+            {
+                Id = videoGame.Id,
+                Name = videoGame.Name,
+                Genre = videoGame.Genre,
+                ReleaseDate = videoGame.ReleaseDate
+            };
         }
 
         public async Task<VideoGameDto> CreateVideoGameAsync(CreateUpdateVideoGameDto videoGame)
