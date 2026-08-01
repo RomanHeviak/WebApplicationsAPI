@@ -82,9 +82,6 @@ namespace WebApplicationAPI.Services.VideoGameCharacter
             updateCharacter.Role = character.Role;
             updateCharacter.UpdatedAt = DateTime.UtcNow;
 
-            await context.SaveChangesAsync();
-
-
             context.Characters.Update(updateCharacter);
             await context.SaveChangesAsync();
 

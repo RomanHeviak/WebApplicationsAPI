@@ -17,6 +17,18 @@ namespace WebApplicationAPI.Controllers
             return Ok(createdVideoGame);
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<VideoGameDto>> UpdateVideoGame(int id, CreateUpdateVideoGameDto videoGameInfo)
+        {
+            var updatedVideoGame = await service.UpdateVideoGameAsync(id, videoGameInfo);
+
+            if (updatedVideoGame == null) {
+                return NotFound("Video game not found");
+            }
+
+            return Ok(updatedVideoGame);
+        }
+
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteVideoGame(int id)
         {
