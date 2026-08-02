@@ -37,6 +37,30 @@ namespace WebApplicationAPI.Services.VideoGame
             };
         }
 
+        public async Task<VideoGameDto?> ReleaseVideoGameAsync(int id)
+        {
+            var videoGame = await context.VideoGames.FindAsync(id);
+            if (videoGame is null)
+            {
+                return null;
+            }
+            if (videoGame.ReleaseDate != null) {
+                throw new ArgumentException("Game is already released!");
+            }
+            videoGame.ReleaseDate = DateTime.UtcNow;
+
+            context.VideoGames.Update(videoGame);
+            await context.SaveChangesAsync();
+
+            return new VideoGameDto
+            {
+                Id = videoGame.Id,
+                Name = videoGame.Name,
+                Genre = videoGame.Genre,
+                ReleaseDate = videoGame.ReleaseDate
+            };
+        }
+
         public async Task<VideoGameDto> CreateVideoGameAsync(CreateUpdateVideoGameDto videoGame)
         {
             var newVideoGame = new Models.VideoGame

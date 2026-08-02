@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApplicationAPI.Dtos.VideoGame;
+using WebApplicationAPI.Models;
 using WebApplicationAPI.Services.VideoGame;
 
 namespace WebApplicationAPI.Controllers
@@ -33,6 +34,26 @@ namespace WebApplicationAPI.Controllers
             var createdVideoGame = await service.CreateVideoGameAsync(videoGameInfo);
 
             return Ok(createdVideoGame);
+        }
+
+        [HttpPut("release/{id}")]
+        public async Task<ActionResult<VideoGameDto>> ReleaseVideoGame(int id)
+        {
+            try
+            {
+                var releasedVideoGame = await service.ReleaseVideoGameAsync(id);
+                if (releasedVideoGame is null)
+                {
+                    return NotFound("Video game not found");
+                }
+
+                return Ok(releasedVideoGame);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
 
         [HttpPut("{id}")]
