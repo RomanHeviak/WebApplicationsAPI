@@ -12,12 +12,16 @@ namespace WebApplicationAPI.Controllers
     {
 
         [HttpGet]
+        [EndpointSummary("📋 Get all video game characters")]
+        [EndpointDescription("Retrieves the complete list of video game characters available in the system.")]
         public async Task<ActionResult<List<CharacterDto>>> GetCharacters()
         {
             return Ok(await service.GetAllCharactersAsync());
         }
 
         [HttpGet("{id}")]
+        [EndpointSummary("🔍 Get a video game character by ID")]
+        [EndpointDescription("Retrieves a single video game character matching the specified ID.")]
         public async Task<ActionResult<CharacterDto>> GetCharacter(int id)
         {
             var character = await service.GetCharacterByIdAsync(id);
@@ -29,6 +33,8 @@ namespace WebApplicationAPI.Controllers
         }
 
         [HttpPost]
+        [EndpointSummary("🚀 Create a new video game character")]
+        [EndpointDescription("Creates a new video game character with the provided information.")]
         public async Task<ActionResult<CharacterDto>> CreateCharacter(CreateCharacterDto characterInfo)
         {
             var createdCharacter = await service.AddCharacterAsync(characterInfo);
@@ -37,6 +43,8 @@ namespace WebApplicationAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [EndpointSummary("🚀 Update an existing video game character")]
+        [EndpointDescription("Updates the video game character matching the specified ID with the provided information.")]
         public async Task<ActionResult<CharacterDto>> UpdateCharacter(int id, UpdateCharacterDto characterInfo)
         {
             if (!id.Equals(characterInfo.Id))
@@ -54,6 +62,8 @@ namespace WebApplicationAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [EndpointSummary("💀 Delete a video game character")]
+        [EndpointDescription("Deletes the video game character matching the specified ID.")]
         public async Task<ActionResult<bool>> DeleteCharacter(int id)
         {
             var isDeleted = await service.DeleteCharacterAsync(id);
