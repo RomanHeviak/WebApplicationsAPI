@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using WebApplicationAPI.Dtos.Common;
 using WebApplicationAPI.Dtos.VideoGame;
-using WebApplicationAPI.Models;
 using WebApplicationAPI.Services.VideoGame;
 
 namespace WebApplicationAPI.Controllers
@@ -11,9 +10,9 @@ namespace WebApplicationAPI.Controllers
     public class VideoGamesController(IVideoGameService service) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<VideoGameDto>>> GetAllVideoGames()
+        public async Task<ActionResult<PagedResult<VideoGameDto>>> GetAllVideoGames([FromQuery] VideoGameQueryParameters query)
         {
-            var videoGames = await service.GetAllVideoGamesAsync();
+            var videoGames = await service.GetAllVideoGamesAsync(query);
             return Ok(videoGames);
         }
 

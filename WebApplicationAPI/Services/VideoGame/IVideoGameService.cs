@@ -1,10 +1,11 @@
-﻿using WebApplicationAPI.Dtos.VideoGame;
+﻿using WebApplicationAPI.Dtos.Common;
+using WebApplicationAPI.Dtos.VideoGame;
 
 namespace WebApplicationAPI.Services.VideoGame
 {
     public interface IVideoGameService
     {
-        Task<List<VideoGameDto>> GetAllVideoGamesAsync();
+        Task<PagedResult<VideoGameDto>> GetAllVideoGamesAsync(VideoGameQueryParameters query);
         Task<VideoGameDto?> GetVideoGameByIdAsync(int id);
         Task<VideoGameDto> CreateVideoGameAsync(CreateUpdateVideoGameDto videoGame);
         Task<VideoGameDto> ReleaseVideoGameAsync(int id);

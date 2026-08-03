@@ -1,16 +1,30 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApplicationAPI.Data;
-using WebApplicationAPI.Dtos.Character;
+using WebApplicationAPI.Dtos.Common;
 using WebApplicationAPI.Dtos.VideoGame;
-using WebApplicationAPI.Models;
 
 namespace WebApplicationAPI.Services.VideoGame
 {
     public class VideoGameService(AppDbContext context) : IVideoGameService
     {
-        public async Task<List<VideoGameDto>> GetAllVideoGamesAsync()
+        public async Task<PagedResult<VideoGameDto>> GetAllVideoGamesAsync(VideoGameQueryParameters query)
         {
-            return await context.VideoGames
+            var videoGamesQuery = context.VideoGames.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(query.Search))
+            {
+                videoGamesQuery = videoGamesQuery.Where(vg => vg.Name.Contains(query.Search));
+            }
+
+            var totalCount = await videoGamesQuery.CountAsync();
+
+            var page = Math.Max(1, query.Page);
+            var pageSize = Math.Max(1, query.PageSize);
+
+            var items = await videoGamesQuery
+                .OrderBy(vg => vg.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .Select(vg => new VideoGameDto
                 {
                     Id = vg.Id,
@@ -19,6 +33,14 @@ namespace WebApplicationAPI.Services.VideoGame
                     ReleaseDate = vg.ReleaseDate
                 })
                 .ToListAsync();
+
+            return new PagedResult<VideoGameDto>
+            {
+                Items = items,
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = totalCount
+            };
         }
 
         public async Task<VideoGameDto?> GetVideoGameByIdAsync(int id)
