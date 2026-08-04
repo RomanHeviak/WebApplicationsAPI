@@ -20,6 +20,7 @@ namespace WebApplicationAPI.Controllers
             return Ok(await service.GetAllCharactersAsync());
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         [EndpointSummary("🔍 Get a video game character by ID")]
         [EndpointDescription("Retrieves a single video game character matching the specified ID.")]
@@ -33,6 +34,7 @@ namespace WebApplicationAPI.Controllers
             return Ok(character);
         }
 
+        [Authorize]
         [HttpPost]
         [EndpointSummary("🚀 Create a new video game character")]
         [EndpointDescription("Creates a new video game character with the provided information.")]
@@ -43,6 +45,7 @@ namespace WebApplicationAPI.Controllers
             return CreatedAtAction(nameof(GetCharacter), new { id = createdCharacter.Id }, createdCharacter);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         [EndpointSummary("🚀 Update an existing video game character")]
         [EndpointDescription("Updates the video game character matching the specified ID with the provided information.")]
@@ -62,6 +65,7 @@ namespace WebApplicationAPI.Controllers
             return Ok(updated);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         [EndpointSummary("💀 Delete a video game character")]
         [EndpointDescription("Deletes the video game character matching the specified ID.")]
