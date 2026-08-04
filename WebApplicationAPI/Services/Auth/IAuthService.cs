@@ -5,5 +5,6 @@ namespace WebApplicationAPI.Services.Auth
     public interface IAuthService
     {
         Task<UserDto> RegisterUser(CreateUserDto userData);
+        Task<UserDto> LoginUser(LoginUserDto userData);
     }
 }
