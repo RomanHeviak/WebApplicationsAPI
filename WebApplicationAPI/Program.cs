@@ -2,6 +2,7 @@ using WebApplicationAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationAPI.Services.VideoGameCharacter;
 using WebApplicationAPI.Services.VideoGame;
+using WebApplicationAPI.Services.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IVideoGameCharacterService, VideoGameCharacterService>();
 builder.Services.AddScoped<IVideoGameService, VideoGameService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
