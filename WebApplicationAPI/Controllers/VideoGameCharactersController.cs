@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApplicationAPI.Models;
 using WebApplicationAPI.Services.VideoGameCharacter;
 using WebApplicationAPI.Dtos.Character;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApplicationAPI.Controllers
 {
@@ -10,7 +11,7 @@ namespace WebApplicationAPI.Controllers
     [ApiController]
     public class VideoGameCharactersController(IVideoGameCharacterService service) : ControllerBase
     {
-
+        [Authorize]
         [HttpGet]
         [EndpointSummary("📋 Get all video game characters")]
         [EndpointDescription("Retrieves the complete list of video game characters available in the system.")]
