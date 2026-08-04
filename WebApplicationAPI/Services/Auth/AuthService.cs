@@ -9,7 +9,7 @@ namespace WebApplicationAPI.Services.Auth
 {
     public class AuthService(AppDbContext context) : IAuthService
     {
-        public async Task<UserDto?> RegisterUser(CreateUserDto userData)
+        public async Task<UserDto> RegisterUser(CreateUserDto userData)
         {
             var firstName = userData.FirstName.Trim();
             var lastName = userData.LastName.Trim();
@@ -27,6 +27,7 @@ namespace WebApplicationAPI.Services.Auth
             var user = new User
             {
                 Id = Guid.NewGuid(),
+                Login = userData.Login,
                 FirstName = firstName,
                 LastName = lastName
             };
@@ -40,6 +41,7 @@ namespace WebApplicationAPI.Services.Auth
             return new UserDto
             {
                 Id = user.Id,
+                Login = user.Login,
                 FirstName = user.FirstName,
                 LastName = user.LastName
             };

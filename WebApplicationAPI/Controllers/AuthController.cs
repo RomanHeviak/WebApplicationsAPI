@@ -9,6 +9,8 @@ namespace WebApplicationAPI.Controllers
     public class AuthController(IAuthService service) : ControllerBase
     {
         [HttpPost("register")]
+        [EndpointSummary("🚀 Register a new user")]
+        [EndpointDescription("Creates a new user account from the provided details and returns the created user.")]
         public async Task<IActionResult> Register(CreateUserDto userData)
         {
             try
