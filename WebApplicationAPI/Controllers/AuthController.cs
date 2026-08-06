@@ -15,7 +15,7 @@ namespace WebApplicationAPI.Controllers
         {
             try
             {
-                var user = await service.RegisterUser(userData);
+                var user = await service.RegisterUserAsync(userData);
                 return Ok(user);
             }
             catch (InvalidOperationException ex)
@@ -31,7 +31,7 @@ namespace WebApplicationAPI.Controllers
         {
             try
             {
-                var user = await service.LoginUser(userData);
+                var user = await service.LoginUserAsync(userData);
                 return Ok(user);
             }
             catch (InvalidOperationException ex)

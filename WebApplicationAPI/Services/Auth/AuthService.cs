@@ -12,7 +12,7 @@ namespace WebApplicationAPI.Services.Auth
 {
     public class AuthService(AppDbContext context, IConfiguration configuration) : IAuthService
     {
-        public async Task<UserDto> RegisterUser(CreateUserDto userData)
+        public async Task<UserDto> RegisterUserAsync(CreateUserDto userData)
         {
             var firstName = userData.FirstName.Trim();
             var lastName = userData.LastName.Trim();
@@ -51,7 +51,7 @@ namespace WebApplicationAPI.Services.Auth
             };
         }
 
-        public async Task<UserDto> LoginUser(LoginUserDto userData)
+        public async Task<UserDto> LoginUserAsync(LoginUserDto userData)
         {
             var password = DecodePassword(userData.Password);
 
