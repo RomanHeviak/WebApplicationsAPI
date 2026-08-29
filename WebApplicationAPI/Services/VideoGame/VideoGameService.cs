@@ -1,51 +1,52 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using WebApplicationAPI.Data;
 using WebApplicationAPI.Dtos.Common;
 using WebApplicationAPI.Dtos.VideoGame;
 
 namespace WebApplicationAPI.Services.VideoGame
 {
-    public class VideoGameService(AppDbContext context) : IVideoGameService
+    public class VideoGameService(MongoDbContext context) : IVideoGameService
     {
         public async Task<PagedResult<VideoGameDto>> GetAllVideoGamesAsync(VideoGameQueryParameters query)
         {
-            var videoGamesQuery = context.VideoGames.AsQueryable();
+            var filter = string.IsNullOrWhiteSpace(query.Search)
+                ? Builders<Models.VideoGame>.Filter.Empty
+                : Builders<Models.VideoGame>.Filter.Regex(
+                    vg => vg.Name, new BsonRegularExpression(query.Search, "i"));
 
-            if (!string.IsNullOrWhiteSpace(query.Search))
-            {
-                videoGamesQuery = videoGamesQuery.Where(vg => vg.Name.Contains(query.Search));
-            }
-
-            var totalCount = await videoGamesQuery.CountAsync();
+            var totalCount = await context.VideoGames.CountDocumentsAsync(filter);
 
             var page = Math.Max(1, query.Page);
             var pageSize = Math.Max(1, query.PageSize);
 
-            var items = await videoGamesQuery
-                .OrderBy(vg => vg.Id)
+            var videoGames = await context.VideoGames.Find(filter)
+                .SortBy(vg => vg.Id)
                 .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .Select(vg => new VideoGameDto
-                {
-                    Id = vg.Id,
-                    Name = vg.Name,
-                    Genre = vg.Genre,
-                    ReleaseDate = vg.ReleaseDate
-                })
+                .Limit(pageSize)
                 .ToListAsync();
+
+            var items = videoGames.Select(vg => new VideoGameDto
+            {
+                Id = vg.Id,
+                Name = vg.Name,
+                Genre = vg.Genre,
+                ReleaseDate = vg.ReleaseDate
+            }).ToList();
 
             return new PagedResult<VideoGameDto>
             {
                 Items = items,
                 Page = page,
                 PageSize = pageSize,
-                TotalCount = totalCount
+                TotalCount = (int)totalCount
             };
         }
 
-        public async Task<VideoGameDto?> GetVideoGameByIdAsync(int id)
+        public async Task<VideoGameDto?> GetVideoGameByIdAsync(string id)
         {
-            var videoGame = await context.VideoGames.FindAsync(id);
+            var videoGame = await context.VideoGames
+                .Find(vg => vg.Id == id).FirstOrDefaultAsync();
             if (videoGame is null)
             {
                 return null;
@@ -59,9 +60,10 @@ namespace WebApplicationAPI.Services.VideoGame
             };
         }
 
-        public async Task<VideoGameDto?> ReleaseVideoGameAsync(int id)
+        public async Task<VideoGameDto?> ReleaseVideoGameAsync(string id)
         {
-            var videoGame = await context.VideoGames.FindAsync(id);
+            var videoGame = await context.VideoGames
+                .Find(vg => vg.Id == id).FirstOrDefaultAsync();
             if (videoGame is null)
             {
                 return null;
@@ -71,8 +73,7 @@ namespace WebApplicationAPI.Services.VideoGame
             }
             videoGame.ReleaseDate = DateTime.UtcNow;
 
-            context.VideoGames.Update(videoGame);
-            await context.SaveChangesAsync();
+            await context.VideoGames.ReplaceOneAsync(vg => vg.Id == id, videoGame);
 
             return new VideoGameDto
             {
@@ -92,8 +93,7 @@ namespace WebApplicationAPI.Services.VideoGame
                 ReleaseDate = null
             };
 
-            context.VideoGames.Add(newVideoGame);
-            await context.SaveChangesAsync();
+            await context.VideoGames.InsertOneAsync(newVideoGame);
 
             return new VideoGameDto
             {
@@ -104,9 +104,10 @@ namespace WebApplicationAPI.Services.VideoGame
             };
         }
 
-        public async Task<VideoGameDto?> UpdateVideoGameAsync(int id, CreateUpdateVideoGameDto videoGameInfo)
+        public async Task<VideoGameDto?> UpdateVideoGameAsync(string id, CreateUpdateVideoGameDto videoGameInfo)
         {
-            var videoGame = await context.VideoGames.FindAsync(id);
+            var videoGame = await context.VideoGames
+                .Find(vg => vg.Id == id).FirstOrDefaultAsync();
             if (videoGame == null)
             {
                 return null;
@@ -115,9 +116,7 @@ namespace WebApplicationAPI.Services.VideoGame
             videoGame.Name = videoGameInfo.Name;
             videoGame.Genre = videoGameInfo.Genre;
 
-
-            context.VideoGames.Update(videoGame);
-            await context.SaveChangesAsync();
+            await context.VideoGames.ReplaceOneAsync(vg => vg.Id == id, videoGame);
 
             return new VideoGameDto
             {
@@ -128,18 +127,10 @@ namespace WebApplicationAPI.Services.VideoGame
             };
         }
 
-        public async Task<bool> DeleteVideoGameAsync(int id)
+        public async Task<bool> DeleteVideoGameAsync(string id)
         {
-            var videoGame = await context.VideoGames.FindAsync(id);
-            if (videoGame is null)
-            {
-                return false;
-            }
-
-            context.VideoGames.Remove(videoGame);
-            await context.SaveChangesAsync();
-
-            return true;
+            var result = await context.VideoGames.DeleteOneAsync(vg => vg.Id == id);
+            return result.DeletedCount > 0;
         }
     }
 }

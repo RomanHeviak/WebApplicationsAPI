@@ -1,5 +1,4 @@
 using WebApplicationAPI.Data;
-using Microsoft.EntityFrameworkCore;
 using WebApplicationAPI.Services.VideoGameCharacter;
 using WebApplicationAPI.Services.VideoGame;
 using WebApplicationAPI.Services.Auth;
@@ -27,8 +26,9 @@ builder.Services.AddSwaggerGen(options =>
     options.DocumentFilter<WebApplicationAPI.Swagger.AuthorizeCheckDocumentFilter>();
 });
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.Configure<MongoSettings>(
+    builder.Configuration.GetSection("MongoSettings"));
+builder.Services.AddSingleton<MongoDbContext>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

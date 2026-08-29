@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -10,7 +10,7 @@ using WebApplicationAPI.Models;
 
 namespace WebApplicationAPI.Services.Auth
 {
-    public class AuthService(AppDbContext context, IConfiguration configuration) : IAuthService
+    public class AuthService(MongoDbContext context, IConfiguration configuration) : IAuthService
     {
         public async Task<UserDto> RegisterUserAsync(CreateUserDto userData)
         {
@@ -20,7 +20,8 @@ namespace WebApplicationAPI.Services.Auth
             var password = DecodePassword(userData.Password);
 
             var userExists = await context.Users
-                .AnyAsync(u => u.FirstName == firstName && u.LastName == lastName);
+                .Find(u => u.FirstName == firstName && u.LastName == lastName)
+                .AnyAsync();
 
             if (userExists)
             {
@@ -29,7 +30,6 @@ namespace WebApplicationAPI.Services.Auth
 
             var user = new User
             {
-                Id = Guid.NewGuid(),
                 Login = userData.Login,
                 FirstName = firstName,
                 LastName = lastName
@@ -38,8 +38,7 @@ namespace WebApplicationAPI.Services.Auth
             user.PasswordHash = new PasswordHasher<User>()
                 .HashPassword(user, password);
 
-            context.Users.Add(user);
-            await context.SaveChangesAsync();
+            await context.Users.InsertOneAsync(user);
 
             return new UserDto
             {
@@ -56,7 +55,8 @@ namespace WebApplicationAPI.Services.Auth
             var password = DecodePassword(userData.Password);
 
             var user = await context.Users
-                .FirstOrDefaultAsync(u => u.Login == userData.Login)
+                .Find(u => u.Login == userData.Login)
+                .FirstOrDefaultAsync()
                 ?? throw new InvalidOperationException("Invalid login or password.");
 
             var result = new PasswordHasher<User>()

@@ -21,7 +21,7 @@ namespace WebApplicationAPI.Controllers
         [HttpGet("{id}")]
         [EndpointSummary("🔍 Get a video game by ID")]
         [EndpointDescription("Retrieves a single video game matching the specified ID.")]
-        public async Task<ActionResult<VideoGameDto>> GetVideoGameById(int id)
+        public async Task<ActionResult<VideoGameDto>> GetVideoGameById(string id)
         {
             var videoGame = await service.GetVideoGameByIdAsync(id);
             if (videoGame is null)
@@ -44,7 +44,7 @@ namespace WebApplicationAPI.Controllers
         [HttpPut("release/{id}")]
         [EndpointSummary("🚀 Release a video game")]
         [EndpointDescription("Marks the video game matching the specified ID as released.")]
-        public async Task<ActionResult<VideoGameDto>> ReleaseVideoGame(int id)
+        public async Task<ActionResult<VideoGameDto>> ReleaseVideoGame(string id)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace WebApplicationAPI.Controllers
         [HttpPut("{id}")]
         [EndpointSummary("🚀 Update an existing video game")]
         [EndpointDescription("Updates the video game matching the specified ID with the provided information.")]
-        public async Task<ActionResult<VideoGameDto>> UpdateVideoGame(int id, CreateUpdateVideoGameDto videoGameInfo)
+        public async Task<ActionResult<VideoGameDto>> UpdateVideoGame(string id, CreateUpdateVideoGameDto videoGameInfo)
         {
             var updatedVideoGame = await service.UpdateVideoGameAsync(id, videoGameInfo);
 
@@ -80,7 +80,7 @@ namespace WebApplicationAPI.Controllers
         [HttpDelete("{id}")]
         [EndpointSummary("💀 Delete a video game")]
         [EndpointDescription("Deletes the video game matching the specified ID.")]
-        public async Task<ActionResult> DeleteVideoGame(int id)
+        public async Task<ActionResult> DeleteVideoGame(string id)
         {
             var isDeleted = await service.DeleteVideoGameAsync(id);
             if (!isDeleted)

@@ -24,7 +24,7 @@ namespace WebApplicationAPI.Controllers
         [HttpGet("{id}")]
         [EndpointSummary("🔍 Get a video game character by ID")]
         [EndpointDescription("Retrieves a single video game character matching the specified ID.")]
-        public async Task<ActionResult<CharacterDto>> GetCharacter(int id)
+        public async Task<ActionResult<CharacterDto>> GetCharacter(string id)
         {
             var character = await service.GetCharacterByIdAsync(id);
             if (character is null)
@@ -49,7 +49,7 @@ namespace WebApplicationAPI.Controllers
         [HttpPut("{id}")]
         [EndpointSummary("🚀 Update an existing video game character")]
         [EndpointDescription("Updates the video game character matching the specified ID with the provided information.")]
-        public async Task<ActionResult<CharacterDto>> UpdateCharacter(int id, UpdateCharacterDto characterInfo)
+        public async Task<ActionResult<CharacterDto>> UpdateCharacter(string id, UpdateCharacterDto characterInfo)
         {
             if (!id.Equals(characterInfo.Id))
             {
@@ -69,7 +69,7 @@ namespace WebApplicationAPI.Controllers
         [HttpDelete("{id}")]
         [EndpointSummary("💀 Delete a video game character")]
         [EndpointDescription("Deletes the video game character matching the specified ID.")]
-        public async Task<ActionResult<bool>> DeleteCharacter(int id)
+        public async Task<ActionResult<bool>> DeleteCharacter(string id)
         {
             var isDeleted = await service.DeleteCharacterAsync(id);
             if (!isDeleted)

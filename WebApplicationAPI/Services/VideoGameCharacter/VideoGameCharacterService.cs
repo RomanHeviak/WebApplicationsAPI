@@ -1,15 +1,19 @@
 ﻿using WebApplicationAPI.Models;
 using WebApplicationAPI.Data;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using WebApplicationAPI.Dtos.Character;
 
 namespace WebApplicationAPI.Services.VideoGameCharacter
 {
-    public class VideoGameCharacterService(AppDbContext context) : IVideoGameCharacterService
+    public class VideoGameCharacterService(MongoDbContext context) : IVideoGameCharacterService
     {
         public async Task<List<CharacterDto>> GetAllCharactersAsync()
         {
-            return await context.Characters
+            var characters = await context.Characters
+                .Find(Builders<Character>.Filter.Empty)
+                .ToListAsync();
+
+            return characters
                 .Select(c => new CharacterDto
                 {
                     Name = c.Name,
@@ -20,12 +24,13 @@ namespace WebApplicationAPI.Services.VideoGameCharacter
                     CreatedAt = c.CreatedAt,
                     UpdatedAt = c.UpdatedAt
                 })
-                .ToListAsync();
+                .ToList();
         }
 
-        public async Task<CharacterDto?> GetCharacterByIdAsync(int id)
+        public async Task<CharacterDto?> GetCharacterByIdAsync(string id)
         {
-            var character = await context.Characters.FindAsync(id);
+            var character = await context.Characters
+                .Find(c => c.Id == id).FirstOrDefaultAsync();
 
             if (character is null)
             {
@@ -55,8 +60,7 @@ namespace WebApplicationAPI.Services.VideoGameCharacter
                 UpdatedAt = null
             };
 
-            context.Characters.Add(newCharacter);
-            await context.SaveChangesAsync();
+            await context.Characters.InsertOneAsync(newCharacter);
 
             return new CharacterDto
             {
@@ -72,7 +76,8 @@ namespace WebApplicationAPI.Services.VideoGameCharacter
 
         public async Task<CharacterDto?> UpdateCharacterAsync(UpdateCharacterDto character)
         {
-            var updateCharacter = await context.Characters.FindAsync(character.Id);
+            var updateCharacter = await context.Characters
+                .Find(c => c.Id == character.Id).FirstOrDefaultAsync();
             if (updateCharacter == null) {
                 return null;
             }
@@ -82,8 +87,7 @@ namespace WebApplicationAPI.Services.VideoGameCharacter
             updateCharacter.Role = character.Role;
             updateCharacter.UpdatedAt = DateTime.UtcNow;
 
-            context.Characters.Update(updateCharacter);
-            await context.SaveChangesAsync();
+            await context.Characters.ReplaceOneAsync(c => c.Id == character.Id, updateCharacter);
 
             return new CharacterDto
             {
@@ -97,18 +101,10 @@ namespace WebApplicationAPI.Services.VideoGameCharacter
             };
         }
 
-        public async Task<bool> DeleteCharacterAsync(int id)
+        public async Task<bool> DeleteCharacterAsync(string id)
         {
-            var character = await context.Characters.FindAsync(id);
-            if (character is null)
-            {
-                return false;
-            }
-
-            context.Characters.Remove(character);
-            await context.SaveChangesAsync();
-
-            return true;
+            var result = await context.Characters.DeleteOneAsync(c => c.Id == id);
+            return result.DeletedCount > 0;
         }
     }
 }
