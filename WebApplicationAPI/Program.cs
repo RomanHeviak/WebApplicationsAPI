@@ -85,4 +85,6 @@ app.MapControllers();
 
 app.MapAuthEndpoints();
 
+app.MapVideoGameEndpoints();
+
 app.Run();
