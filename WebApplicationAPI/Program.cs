@@ -1,4 +1,5 @@
 using WebApplicationAPI.Data;
+using WebApplicationAPI.Endpoints;
 using WebApplicationAPI.Services.VideoGameCharacter;
 using WebApplicationAPI.Services.VideoGame;
 using WebApplicationAPI.Services.Auth;
@@ -81,5 +82,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapAuthEndpoints();
 
 app.Run();
