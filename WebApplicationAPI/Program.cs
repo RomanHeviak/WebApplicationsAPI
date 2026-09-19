@@ -9,8 +9,6 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -48,6 +46,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddAuthorization();
+
 builder.Services.AddScoped<IVideoGameCharacterService, VideoGameCharacterService>();
 builder.Services.AddScoped<IVideoGameService, VideoGameService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -81,10 +81,10 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapControllers();
-
 app.MapAuthEndpoints();
 
 app.MapVideoGameEndpoints();
+
+app.MapVideoGameCharacterEndpoints();
 
 app.Run();
